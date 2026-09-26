@@ -1,0 +1,61 @@
+/* Decision Lab: partner page. */
+
+.engagement .card { display: flex; flex-direction: column; gap: 10px; }
+.engagement .step-no { align-self: flex-start; margin-bottom: 4px; }
+.engagement h3 { font-size: 20px; }
+.engagement .meta-line { font-size: 13px; color: var(--muted); margin-top: -4px; }
+.engagement .out { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--line); font-size: 15px; color: var(--ink-2); }
+.fee-line { margin-top: 20px; font-weight: 600; }
+
+.why { display: grid; grid-template-columns: 1fr 1.3fr; gap: 40px; align-items: start; }
+
+.affiliations { padding-top: 16px; }
+.logo-section { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 36px; padding: 42px 0; border-top: 1px solid var(--line); align-items: center; }
+.logo-section h2 { font-size: 24px; line-height: 1.3; }
+.logo-grid { display: grid; gap: 20px; align-items: center; }
+.talent-logos { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.partner-logos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.logo-cell { min-height: 86px; display: flex; justify-content: center; align-items: center; }
+.logo-cell img { max-width: 100%; object-fit: contain; filter: grayscale(1); }
+@media (max-width: 860px) {
+  .logo-section { grid-template-columns: 1fr; gap: 20px; padding: 32px 0; }
+}
+@media (max-width: 560px) {
+  .talent-logos, .partner-logos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.who { display: grid; grid-template-columns: 120px 1fr; gap: 32px; align-items: start; }
+.who-avatar { width: 120px; height: 120px; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; font-size: 44px; font-weight: 650; overflow: hidden; }
+.who-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.who-role { color: var(--ink-2); margin-top: 6px; font-size: 17px; }
+.who-lines { margin: 16px 0 0; padding-left: 18px; display: grid; gap: 6px; color: var(--ink-2); }
+.who-links { margin-top: 16px; display: flex; gap: 18px; }
+
+.intake { display: grid; grid-template-columns: 1fr 440px; gap: 48px; align-items: start; }
+.checks { list-style: none; padding: 0; margin: 24px 0; display: grid; gap: 10px; }
+.checks li { padding-left: 26px; position: relative; color: var(--ink-2); }
+.checks li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+.intake-card { padding: 28px; box-shadow: 0 1px 2px rgba(20,23,28,.04), 0 8px 24px rgba(20,23,28,.05); }
+.progress { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+.progress span { width: 28px; height: 4px; border-radius: 2px; background: var(--line); }
+.progress span.on { background: var(--accent); }
+.progress span:last-of-type { margin-right: 6px; }
+.estimate-attach { background: var(--accent-soft); border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 16px; }
+.check { display: flex; gap: 8px; align-items: flex-start; font-weight: 500; font-size: 14px; color: var(--accent-ink); }
+.check input { margin-top: 3px; accent-color: var(--accent); }
+.skip { display: block; margin: 12px auto 0; }
+.done-mark { width: 44px; height: 44px; border-radius: 50%; background: var(--good-soft); color: var(--good); display: grid; place-items: center; font-size: 22px; font-weight: 700; margin-bottom: 14px; }
+
+.faq { display: grid; grid-template-columns: 1fr 2fr; gap: 40px; }
+.faq details { border-bottom: 1px solid var(--line-2); padding: 16px 0; }
+.faq details:first-child { padding-top: 0; }
+.faq summary { font-size: 17px; color: var(--ink); }
+.faq details p { margin-top: 10px; color: var(--ink-2); }
+
+.narrow > * { max-width: 760px; }
+
+@media (max-width: 860px) {
+  .why, .intake, .faq { grid-template-columns: 1fr; gap: 24px; }
+  .who { grid-template-columns: 1fr; gap: 20px; }
+  .who-avatar { width: 88px; height: 88px; font-size: 32px; }
+}

@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Decision Lab: Jev field guide for operators</title>
+  <meta name="description" content="What Jev is, where it fits, where it breaks, limits, pricing, confidence routing, integration and vendor risk. One page, sourced.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2315171c'/%3E%3Cpath d='M10 8v10h12' stroke='%23fff' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M18 14l4 4-4 4' stroke='%237fd1d8' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/guide.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M3 1.5v7h8" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.5 5.5l2.5 3-2.5 3" stroke="#7fd1d8" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span data-brand>Decision Lab</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="index.html">Evaluate</a>
+      <a href="guide.html" aria-current="page">Field guide</a>
+      <a href="partner.html">Deploy</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero guide-hero">
+    <div class="wrap">
+      <p class="eyebrow">Field guide</p>
+      <h1>Jev for operators</h1>
+      <p class="lede">What it does, where it breaks, what it costs and how to adopt it without betting production on it. Sourced from TypeSafe’s docs, verified <span data-verified></span>.</p>
+    </div>
+  </section>
+
+  <div class="wrap guide">
+    <nav class="toc" aria-label="On this page">
+      <p class="toc-title">On this page</p>
+      <a href="#what">What Jev is</a>
+      <a href="#fits">Where it fits</a>
+      <a href="#limits">Where it breaks</a>
+      <a href="#confidence">Confidence routing</a>
+      <a href="#specs">Pricing and limits</a>
+      <a href="#integrate">Integration</a>
+      <a href="#risk">Vendor risk</a>
+      <a href="#playbook">Migration playbook</a>
+      <a href="#method">Calculator method</a>
+      <a href="#sources">Sources</a>
+    </nav>
+
+    <article class="guide-body">
+
+      <!-- 1 -->
+      <section id="what">
+        <h2>What Jev is</h2>
+        <p>A decision model. Text or JSON in, a typed answer out, with a probability per option and a confidence score. It does not write prose. TypeSafe calls this class of model System One.</p>
+        <div class="table-wrap">
+          <table>
+            <tr><th>Question type</th><th>Asks</th><th>Returns</th><th>Example</th></tr>
+            <tr><td><b>Choice</b></td><td>Pick one option from a set (up to 255)</td><td>choice, probabilities, confidence</td><td>Which team handles this ticket?</td></tr>
+            <tr><td><b>Score</b></td><td>Rate against 2 to 10 ordered, described levels</td><td>score, probabilities, confidence</td><td>How relevant is this passage to the query?</td></tr>
+            <tr><td><b>Noul</b></td><td>Yes or no</td><td>probability from 0 to 1</td><td>Does this message express urgency?</td></tr>
+          </table>
+        </div>
+        <p class="note">One request can carry several questions against the same state. TypeSafe calls this fan-out; the state is read once.</p>
+      </section>
+
+      <!-- 2 -->
+      <section id="fits">
+        <h2>Where it fits</h2>
+        <p>Anywhere an LLM makes a short, bounded decision inside software. TypeSafe’s use-case map groups them into five families.</p>
+        <div class="fit-grid">
+          <div><h3>Automation</h3><p>Route, classify, score or branch inside a workflow your code controls.</p></div>
+          <div><h3>Real-time</h3><p>Decisions inside UI and games, where multi-second LLM calls do not fit.</p></div>
+          <div><h3>Map-reduce over data</h3><p>Label or score large corpora where frontier LLM cost rules it out.</p></div>
+          <div><h3>Verification</h3><p>Guardrails, citation checks, hallucination and jailbreak screening.</p></div>
+          <div><h3>Harness engineering</h3><p>Model routing, context filtering and error detection around agents.</p></div>
+        </div>
+        <p class="note">Common enterprise starts: support routing, moderation, entity matching, RAG passage filtering, claims triage, fraud alert routing.</p>
+      </section>
+
+      <!-- 3 -->
+      <section id="limits">
+        <h2>Where it breaks</h2>
+        <p>TypeSafe documents nine known limits for jev-1.13. Each has a mitigation. Most move work into code.</p>
+        <div class="table-wrap">
+          <table>
+            <tr><th>Limit</th><th>What happens</th><th>Mitigation</th></tr>
+            <tr><td>Literal reading</td><td>Answers the written question, not the intent.</td><td>State exact conditions and edge cases.</td></tr>
+            <tr><td>Math and counting</td><td>Unreliable, worse as numbers grow.</td><td>Arithmetic and tallies in code.</td></tr>
+            <tr><td>Dates and times</td><td>Reads dates as text, not ordered values.</td><td>Parse dates in code; ask Jev only the judgment.</td></tr>
+            <tr><td>Indirection</td><td>Double negatives and multi-hop wording lower accuracy.</td><td>Ask directly; name the field that matters.</td></tr>
+            <tr><td>Large, noisy state</td><td>Irrelevant content distracts.</td><td>Filter fields in code before the call.</td></tr>
+            <tr><td>Adversarial input</td><td>Does not treat data as hostile by default.</td><td>Explicit criteria, adversarial test set.</td></tr>
+            <tr><td>Contradictory instructions</td><td>Conflicting guidance confuses answers.</td><td>Align instructions and criteria.</td></tr>
+            <tr><td>Cross-type consistency</td><td>No guarantee P(yes) + P(no) = 1 across question types.</td><td>Do not reuse thresholds between Noul and Choice.</td></tr>
+            <tr><td>Generation</td><td>Not trained to write text; slow and poor.</td><td>Keep writing on an LLM.</td></tr>
+          </table>
+        </div>
+        <p class="note">Input is text only: strings, JSON or text arrays. Convert images, audio and PDFs first.</p>
+      </section>
+
+      <!-- 4 -->
+      <section id="confidence">
+        <h2>Confidence routing</h2>
+        <p>The answer says what. Confidence says whether to act. Route on both.</p>
+        <div class="bands" role="img" aria-label="Confidence bands: below 0.5 do not act, 0.5 to 0.9 confirm, above 0.9 act automatically">
+          <div class="band-low"><b>&lt; 0.5</b><span>Do not act. Route to your current model or a person.</span></div>
+          <div class="band-mid"><b>0.5 – 0.9</b><span>Ask for confirmation or queue for review.</span></div>
+          <div class="band-high"><b>&gt; 0.9</b><span>Act automatically.</span></div>
+        </div>
+        <p>These are TypeSafe’s starting points. Its routing pattern goes lower for low-stakes actions (act above 0.6) and higher for consequential ones (above 0.85, otherwise confirm). Set yours from calibration measured on your own labeled data.</p>
+<pre><code><span class="c"># From TypeSafe's confidence-routing pattern</span>
+action = response.answers[<span class="s">"intent"</span>]
+
+<span class="k">if</span> action.confidence &lt; 0.6:
+    route_to_support_agent(account_id)
+<span class="k">elif</span> action.choice == <span class="s">"approve_transfer"</span>:
+    <span class="k">if</span> action.confidence &gt; 0.85:
+        approve_transfer(account_id)
+    <span class="k">else</span>:
+        ask_user_to_confirm(<span class="s">"Approve this transfer?"</span>)</code></pre>
+      </section>
+
+      <!-- 5 -->
+      <section id="specs">
+        <h2>Pricing and limits</h2>
+        <div class="table-wrap">
+          <table class="num">
+            <tr><th>Model</th><td>jev-1.13.0. Aliases: jev-latest, jev-preview.</td></tr>
+            <tr><th>Input price</th><td>$0.042 per million tokens ($42 per billion)</td></tr>
+            <tr><th>Output price</th><td>Free</td></tr>
+            <tr><th>Context</th><td>64k tokens per request. State plus the longest question: 32k.</td></tr>
+            <tr><th>Rate limits</th><td>250,000 tokens/s and 1,200 requests/min, adjusted dynamically</td></tr>
+            <tr><th>Latency</th><td>70 to 500 ms end to end. 0.114s median vs 8.566s for LLMs in TypeSafe’s workflow evals.</td></tr>
+            <tr><th>Customization</th><td>Same weights for every account. Adapt through state, instructions and criteria.</td></tr>
+            <tr><th>Access</th><td>Early access via console.typesafe.ai</td></tr>
+          </table>
+        </div>
+        <p class="note">For comparison, current frontier list prices: Claude Fable 5.1 and GPT-6 Astra at $10 input and $50 output per million tokens. Jev’s input is 238× cheaper and its output is free.</p>
+      </section>
+
+      <!-- 6 -->
+      <section id="integrate">
+        <h2>Integration</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3>REST</h3>
+            <p class="small muted" style="margin:6px 0 10px">POST https://api.typesafe.ai/v1/systemone · Bearer token</p>
+<pre><code>curl -X POST https://api.typesafe.ai/v1/systemone \
+  -H <span class="s">"Authorization: Bearer $TYPESAFE_API_KEY"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"model":"jev-latest",
+       "state":"...",
+       "questions":{"urgency":{"type":"noul",
+       "instructions":"Does this message express urgency?"}}}'</span></code></pre>
+          </div>
+          <div class="card">
+            <h3>Python SDK</h3>
+            <p class="small muted" style="margin:6px 0 10px">pip install typesafe-sdk</p>
+<pre><code><span class="k">from</span> typesafe_sdk <span class="k">import</span> Noul, TypeSafeClient
+
+client = TypeSafeClient()
+response = client.system_one(
+    state=<span class="s">"your text here"</span>,
+    questions={<span class="s">"urgency"</span>: Noul(instructions=<span class="s">"Is this urgent?"</span>)},
+)
+<span class="k">print</span>(response.answers[<span class="s">"urgency"</span>].noul)</code></pre>
+          </div>
+        </div>
+        <ul class="plain">
+          <li><b>JavaScript / TypeScript:</b> TypeSafe JS SDK.</li>
+          <li><b>Vercel AI SDK:</b> TypeSafe provider package.</li>
+          <li><b>Coding agents:</b> TypeSafe publishes a drop-in agent skill for Claude Code and similar tools.</li>
+          <li><b>Existing LLM stacks:</b> keep the LLM for planning and writing; call Jev at each decision point.</li>
+        </ul>
+      </section>
+
+      <!-- 7 -->
+      <section id="risk">
+        <h2>Vendor risk</h2>
+        <p>Jev entered early access on 15 Sep 2026. Price the upside and the exposure together.</p>
+        <div class="table-wrap">
+          <table>
+            <tr><th>Exposure</th><th>Control</th></tr>
+            <tr><td>Early access. No published SLA or plan tiers.</td><td>Current model stays hot as fallback. One flag routes all traffic back.</td></tr>
+            <tr><td>Price sustainability is unproven, by TypeSafe’s own account.</td><td>Check headroom: the brief shows how far Jev’s price can rise before savings reach zero.</td></tr>
+            <tr><td>Model updates change behavior.</td><td>Pin the version returned in each response. Re-run the labeled set before upgrading.</td></tr>
+            <tr><td>Rate limits under peak load.</td><td>Fan-out several questions per request. Request higher limits before cutover.</td></tr>
+            <tr><td>Data handling.</td><td>Review TypeSafe’s terms and privacy policy with your security team before sending production data.</td></tr>
+          </table>
+        </div>
+      </section>
+
+      <!-- 8 -->
+      <section id="playbook">
+        <h2>Migration playbook</h2>
+        <ol class="playbook">
+          <li><b>Pick one workflow.</b> High volume, bounded answer, fallback already possible.</li>
+          <li><b>Label.</b> 20+ examples to start, per TypeSafe. A few hundred for a decision-grade result.</li>
+          <li><b>Shadow-run for 1 to 2 weeks.</b> Log Jev beside your current model. Switch nothing.</li>
+          <li><b>Read the calibration.</b> Accuracy by confidence band sets your thresholds.</li>
+          <li><b>Automate low-risk paths first.</b> Escalate the rest. Expand as measured accuracy holds.</li>
+        </ol>
+        <div class="cta-card">
+          <p><b>Want this run for you?</b> Two-week shadow evaluation, fixed scope.</p>
+          <a class="btn btn-primary btn-sm" href="partner.html">Discuss your workflow</a>
+        </div>
+      </section>
+
+      <!-- 9 -->
+      <section id="method">
+        <h2>Calculator method</h2>
+        <ul class="plain">
+          <li><b>Today:</b> decisions × (input tokens × input price + output tokens × output price), or your actual bill.</li>
+          <li><b>Jev:</b> every eligible decision is tried on Jev first. Jev cost = eligible decisions × Jev input tokens × $0.042 per million.</li>
+          <li><b>Fallback:</b> eligible decisions below your confidence threshold also run on the current model, at today’s cost per decision.</li>
+          <li><b>Unchanged:</b> ineligible decisions stay on the current model.</li>
+          <li><b>Savings:</b> today − (Jev + fallback + unchanged + added operations). Payback uses the one-time migration cost.</li>
+          <li><b>Speed:</b> automated path uses Jev’s 0.114s median. Fallbacks pay Jev’s time plus the current model’s.</li>
+          <li><b>Not assumed:</b> accuracy. A shadow evaluation measures it.</li>
+        </ul>
+      </section>
+
+      <!-- 10 -->
+      <section id="sources">
+        <h2>Sources</h2>
+        <ul class="sources">
+          <li><a href="https://typesafe.ai" target="_blank" rel="noopener">TypeSafe AI homepage</a>: latency and cost claims</li>
+          <li><a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev" target="_blank" rel="noopener">Introducing System One models and Jev</a></li>
+          <li><a href="https://docs.typesafe.ai/models" target="_blank" rel="noopener">Models: pricing, context, rate limits</a></li>
+          <li><a href="https://docs.typesafe.ai/primitives" target="_blank" rel="noopener">Primitives: Choice, Score, Noul</a></li>
+          <li><a href="https://docs.typesafe.ai/confidence" target="_blank" rel="noopener">Confidence</a> and <a href="https://docs.typesafe.ai/patterns/confidence-routing" target="_blank" rel="noopener">confidence routing</a></li>
+          <li><a href="https://docs.typesafe.ai/model-jaggedness/jev-1.13" target="_blank" rel="noopener">Known limitations of jev-1.13</a></li>
+          <li><a href="https://docs.typesafe.ai/concepts/use-case-map" target="_blank" rel="noopener">Use-case map</a></li>
+          <li><a href="https://docs.typesafe.ai/introduction/quickstart" target="_blank" rel="noopener">Quickstart</a> and <a href="https://docs.typesafe.ai/sdk" target="_blank" rel="noopener">SDKs</a></li>
+          <li><a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">Claude pricing</a>, <a href="https://www.yottalabs.ai/post/gpt-6-astra-pricing-api-cost-2026" target="_blank" rel="noopener">GPT-6 Astra pricing</a>, <a href="https://benchlm.ai/google/api-pricing" target="_blank" rel="noopener">Gemini pricing</a></li>
+        </ul>
+      </section>
+    </article>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <p><strong data-brand>Decision Lab</strong>. Independent. Not affiliated with TypeSafe AI. Jev is a TypeSafe AI product.</p>
+    </div>
+    <nav aria-label="Footer">
+      <a href="index.html">Evaluate</a>
+      <a href="partner.html">Deploy</a>
+      <a href="partner.html#privacy">Privacy</a>
+      <a data-contact href="#"></a>
+    </nav>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script src="assets/site.js"></script>
+<script src="assets/guide.js"></script>
+</body>
+</html>

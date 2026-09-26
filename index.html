@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Evaluate Jev for production workflows | Decision Lab</title>
+  <meta name="description" content="Evaluate Jev against your current workflow. Model operating costs, examine deployment constraints and identify what to validate before migration.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2315171c'/%3E%3Cpath d='M10 8v10h12' stroke='%23fff' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M18 14l4 4-4 4' stroke='%237fd1d8' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/assess.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M3 1.5v7h8" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.5 5.5l2.5 3-2.5 3" stroke="#7fd1d8" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span data-brand>Decision Lab</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="index.html" aria-current="page">Evaluate</a>
+      <a href="guide.html">Field guide</a>
+      <a href="partner.html">Deploy</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- 1. Hero: the outcome, then the three sourced facts -->
+  <section class="hero evaluate-hero">
+    <div class="wrap">
+      <p class="eyebrow">A guide to Jev in production</p>
+      <h1>Build the case for<br><span>AI decision automation.</span></h1>
+      <p class="lede">Evaluate Jev for the decisions your operations depend on. Compare costs, examine workflow fit and define what to measure before you change production.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#assess">Review a workflow <span aria-hidden="true">↗</span></a>
+        <a class="hero-link" href="guide.html">Jev operator guide <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="proof" aria-label="Jev: cost, speed and control">
+        <div class="proof-card"><span class="proof-label">01 / Inference cost</span><strong class="proof-value num">$0.042</strong><p>Per million input tokens.<br>Output tokens are free.</p><a href="https://docs.typesafe.ai/models" target="_blank" rel="noopener">Published pricing ↗</a></div>
+        <div class="proof-card"><span class="proof-label">02 / Response time</span><div class="proof-comparison"><div><strong class="proof-value num">0.114<span>s</span></strong><span>Jev</span></div><span class="versus">vs</span><div><strong class="proof-value secondary num">8.566<span>s</span></strong><span>LLM</span></div></div><p>TypeSafe’s published workflow comparison. Results depend on the task.</p><a href="https://typesafe.ai" target="_blank" rel="noopener">View vendor comparison ↗</a></div>
+        <div class="proof-card"><span class="proof-label">03 / Decision control</span><strong class="proof-value proof-text">Calibrated<br>confidence</strong><p>Route uncertain decisions for review. Validate thresholds on your data.</p><a href="guide.html">Understand confidence routing →</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. The assessment: inputs on the left, live result on the right -->
+  <section id="assess" class="section band">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">The business case</p>
+          <h2>Evaluate one workflow</h2>
+          <p class="muted" style="margin-top:8px">Start with an illustrative scenario. Replace its assumptions with your operating data.</p>
+        </div>
+        <label class="example-picker">Start from an example
+          <select id="example"></select>
+        </label>
+      </div>
+
+      <div class="assess-grid">
+        <div class="steps">
+
+          <!-- Step 1: workload -->
+          <fieldset class="card step" id="step-workload">
+            <legend class="visually-hidden">Current workload</legend>
+            <div class="step-title"><span class="step-no">01</span><h3>Current operating baseline</h3></div>
+
+            <div class="field">
+              <label for="model">Current model</label>
+              <select id="model"></select>
+              <span class="hint" id="model-price"></span>
+            </div>
+            <div class="field-row custom-price" id="custom-price" hidden>
+              <div class="field"><label for="price-in">Input price <span class="hint" style="display:inline">USD / M tokens</span></label><input id="price-in" type="number" min="0" step="any" inputmode="decimal"></div>
+              <div class="field"><label for="price-out">Output price <span class="hint" style="display:inline">USD / M tokens</span></label><input id="price-out" type="number" min="0" step="any" inputmode="decimal"></div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="volume">Decisions per month</label>
+                <input id="volume" type="number" min="0" step="1" inputmode="numeric">
+                <span class="hint">For this workflow only.</span>
+              </div>
+              <div class="field">
+                <label for="latency">Current median response</label>
+                <div class="input-affix"><input id="latency" type="number" min="0" step="any" inputmode="decimal"><span>seconds</span></div>
+                <span class="hint">End to end, per decision.</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="tok-in">Input tokens per decision</label>
+                <input id="tok-in" type="number" min="1" step="1" inputmode="numeric">
+                <span class="hint">Prompt and context. About 4 characters per token.</span>
+              </div>
+              <div class="field">
+                <label for="tok-out">Output tokens per decision</label>
+                <input id="tok-out" type="number" min="0" step="1" inputmode="numeric">
+                <span class="hint">Include reasoning tokens. Free on Jev.</span>
+              </div>
+            </div>
+
+            <details id="bill-details">
+              <summary>Use my actual monthly bill instead</summary>
+              <div class="field" style="margin-top:14px">
+                <label for="bill">Monthly model cost for this workflow</label>
+                <div class="input-affix"><input id="bill" type="number" min="0" step="any" inputmode="decimal" placeholder="Leave empty to calculate from tokens"><span>USD</span></div>
+                <span class="hint">Overrides the token-based estimate. Useful with caching or batch discounts.</span>
+              </div>
+            </details>
+          </fieldset>
+
+          <!-- Step 2: fit check -->
+          <fieldset class="card step" id="step-fit">
+            <legend class="visually-hidden">Fit check</legend>
+            <div class="step-title"><span class="step-no">02</span><h3>Workflow requirements</h3><span class="step-meta">Six deployment considerations</span></div>
+            <div id="fit-questions"></div>
+          </fieldset>
+
+          <!-- Step 3: confidence routing and running costs -->
+          <fieldset class="card step" id="step-routing">
+            <legend class="visually-hidden">Confidence routing</legend>
+            <div class="step-title"><span class="step-no">03</span><h3>Confidence routing</h3></div>
+
+            <div class="field">
+              <label for="eligible">Share of decisions moving to Jev <output id="eligible-out" class="range-out num"></output></label>
+              <input id="eligible" type="range" min="0" max="100" step="5">
+              <span class="hint" id="eligible-hint">Set by the fit check.</span>
+            </div>
+            <div class="field">
+              <label for="auto">Answered at or above your confidence threshold <output id="auto-out" class="range-out num"></output></label>
+              <input id="auto" type="range" min="0" max="100" step="5">
+              <span class="hint">These act automatically. The rest go to your current model. A shadow evaluation measures this number.</span>
+            </div>
+
+            <details>
+              <summary>Running and migration costs</summary>
+              <div class="field-row" style="margin-top:14px">
+                <div class="field">
+                  <label for="ops">Added monthly operations</label>
+                  <div class="input-affix"><input id="ops" type="number" min="0" step="any" inputmode="decimal"><span>USD</span></div>
+                  <span class="hint">Monitoring, review queue, retries.</span>
+                </div>
+                <div class="field">
+                  <label for="migration">One-time migration effort</label>
+                  <div class="input-affix"><input id="migration" type="number" min="0" step="any" inputmode="decimal"><span>USD</span></div>
+                  <span class="hint">Evaluation, integration, rollout.</span>
+                </div>
+              </div>
+              <div class="field" style="max-width:50%">
+                <label for="jev-tok">Jev input tokens per decision</label>
+                <input id="jev-tok" type="number" min="1" step="1" inputmode="numeric">
+                <span class="hint">Usually at or below today’s prompt. No output-format instructions needed.</span>
+              </div>
+            </details>
+          </fieldset>
+        </div>
+
+        <!-- Live result -->
+        <aside class="result" id="result" aria-live="polite">
+          <div class="result-inner">
+            <div class="verdict" id="verdict">
+              <span class="tag" id="verdict-tag"></span>
+              <p id="verdict-text"></p>
+            </div>
+
+            <div class="kpi-main">
+              <span class="kpi-label">Estimated monthly savings</span>
+              <strong class="num" id="r-savings">—</strong>
+              <span class="kpi-sub num" id="r-savings-sub"></span>
+            </div>
+
+            <div class="kpis">
+              <div><span class="kpi-label">Annual run-rate</span><strong class="num" id="r-annual">—</strong></div>
+              <div><span class="kpi-label">Payback</span><strong class="num" id="r-payback">—</strong></div>
+              <div><span class="kpi-label">Automated path</span><strong class="num" id="r-speed">—</strong></div>
+              <div><span class="kpi-label">Model wait removed</span><strong class="num" id="r-hours">—</strong></div>
+            </div>
+
+            <div class="viz">
+              <div class="viz-head"><span class="kpi-label">Monthly cost</span></div>
+              <div class="cost-row"><span>Today</span><div class="track"><div class="bar bar-now" id="bar-now"></div></div><strong class="num" id="r-now">—</strong></div>
+              <div class="cost-row"><span>With Jev</span><div class="track"><div class="bar bar-new" id="bar-new"></div></div><strong class="num" id="r-new">—</strong></div>
+              <p class="viz-note num" id="r-cost-parts"></p>
+            </div>
+
+            <div class="viz">
+              <div class="viz-head"><span class="kpi-label">Where each decision goes</span></div>
+              <div class="stack" id="route-stack" role="img" aria-label="Decision routing split">
+                <span class="seg-jev" id="seg-jev"></span><span class="seg-fb" id="seg-fb"></span><span class="seg-stay" id="seg-stay"></span>
+              </div>
+              <ul class="legend num">
+                <li><i class="dot dot-jev"></i>Jev, acts automatically <b id="l-jev"></b></li>
+                <li><i class="dot dot-fb"></i>Low confidence, to current model <b id="l-fb"></b></li>
+                <li><i class="dot dot-stay"></i>Stays on current model <b id="l-stay"></b></li>
+              </ul>
+            </div>
+
+            <p class="error" id="calc-error" role="alert"></p>
+
+            <!-- Value first, then one field. -->
+            <form class="brief-form" id="brief-form" novalidate>
+              <p class="brief-title">Keep the evaluation brief</p>
+              <p class="brief-sub">Your assumptions, estimated economics and a validation checklist. A working document for your team.</p>
+              <div class="brief-row">
+                <label class="visually-hidden" for="brief-email">Work email</label>
+                <input id="brief-email" name="email" type="email" autocomplete="email" placeholder="Work email" required>
+                <div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
+                <button class="btn btn-accent" type="submit">View brief</button>
+              </div>
+              <p class="status" id="brief-status" role="status"></p>
+            </form>
+
+            <!-- Shown after the brief: two optional details and a booking link -->
+            <form class="followup" id="followup-form" hidden novalidate>
+              <p class="brief-title">Add your operating context</p>
+              <p class="brief-sub">Optional details to accompany your evaluation.</p>
+              <div class="field"><label for="fu-company">Company</label><input id="fu-company" name="company" type="text" autocomplete="organization"></div>
+              <div class="field">
+                <span class="label">Your role</span>
+                <div class="seg" role="radiogroup">
+                  <input type="radio" name="role" id="role-exec" value="VP or Director"><label for="role-exec">VP or Director</label>
+                  <input type="radio" name="role" id="role-mgr" value="Engineering manager"><label for="role-mgr">Eng manager</label>
+                  <input type="radio" name="role" id="role-eng" value="Engineer"><label for="role-eng">Engineer</label>
+                  <input type="radio" name="role" id="role-other" value="Other"><label for="role-other">Other</label>
+                </div>
+              </div>
+              <div class="followup-actions">
+                <button class="btn btn-ghost btn-sm" type="submit">Save details</button>
+                <a class="hero-link small" href="partner.html">Explore implementation →</a>
+              </div>
+              <p class="status" id="followup-status" role="status"></p>
+            </form>
+            <button class="link-btn small" id="reopen-brief" hidden type="button">Open the brief again</button>
+
+            <p class="assumptions">Estimates use TypeSafe pricing verified <span data-verified></span> and your inputs. Accuracy is not assumed. <a href="guide.html#limits">Method and limits</a></p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. What a typed decision looks like: the real example from TypeSafe's docs -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>From a request to an operational decision</h2>
+          <p class="muted" style="margin-top:8px">A support request becomes a routing decision. Your application receives the selected team, probabilities and a confidence score.</p>
+        </div>
+        <a class="small" href="https://docs.typesafe.ai/primitives/choice" target="_blank" rel="noopener">Example from TypeSafe docs ↗</a>
+      </div>
+      <div class="grid-2 code-pair">
+        <div>
+          <p class="code-label">Request</p>
+<pre><code>{
+  <span class="k">"state"</span>: <span class="s">"My running shoes arrived in the wrong
+            size. Can I swap them for a size 10?"</span>,
+  <span class="k">"model"</span>: <span class="s">"jev-latest"</span>,
+  <span class="k">"questions"</span>: {
+    <span class="k">"department"</span>: {
+      <span class="k">"type"</span>: <span class="s">"choice"</span>,
+      <span class="k">"instructions"</span>: <span class="s">"Which team should handle this?"</span>,
+      <span class="k">"criteria"</span>: {
+        <span class="k">"returns"</span>:  <span class="s">"Exchanges, wrong or damaged items"</span>,
+        <span class="k">"shipping"</span>: <span class="s">"Delivery status, delays, lost packages"</span>,
+        <span class="k">"billing"</span>:  <span class="s">"Charges, invoices, payment problems"</span>
+      }
+    }
+  }
+}</code></pre>
+        </div>
+        <div>
+          <p class="code-label">Response</p>
+<pre><code>{
+  <span class="k">"model"</span>: <span class="s">"jev-1.13.0"</span>,
+  <span class="k">"answers"</span>: {
+    <span class="k">"department"</span>: {
+      <span class="k">"type"</span>: <span class="s">"choice"</span>,
+      <span class="k">"choice"</span>: <span class="s">"returns"</span>,
+      <span class="k">"confidence"</span>: 1.0,
+      <span class="k">"probabilities"</span>: {
+        <span class="k">"shipping"</span>: 0.0, <span class="k">"returns"</span>: 1.0, <span class="k">"billing"</span>: 0.0
+      }
+    }
+  },
+  <span class="k">"usage"</span>: { <span class="k">"input_tokens"</span>: 328, <span class="k">"output_tokens"</span>: 34 }
+}</code></pre>
+          <ul class="code-notes">
+            <li><b>choice</b> is always one of your keys. No malformed output.</li>
+            <li><b>confidence</b> decides the route: act, confirm or escalate.</li>
+            <li><b>model</b> names the exact version. Pin it and log it.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Partner band -->
+  <section class="section band">
+    <div class="wrap partner-band">
+      <div>
+        <p class="eyebrow">From estimate to evidence</p>
+        <h2>Validate the case<br>on your own workflow.</h2>
+        <p class="lede" style="font-size:17px">Run Jev alongside your current model. Measure accuracy, escalation rates, latency and cost before deciding what moves to production.</p>
+      </div>
+      <div class="partner-band-actions">
+        <a class="hero-link" href="partner.html">Discuss your workflow <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Mobile: live result pinned to the bottom until the full result is on screen -->
+<div class="sticky-result" id="sticky-result" hidden>
+  <div><span class="kpi-label">Monthly savings</span><strong class="num" id="s-savings">—</strong></div>
+  <div><span class="kpi-label">Automated path</span><strong class="num" id="s-speed">—</strong></div>
+  <a class="btn btn-accent btn-sm" href="#result">See result</a>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <p><strong data-brand>Decision Lab</strong>. Independent. Not affiliated with TypeSafe AI. Jev is a TypeSafe AI product.</p>
+      <p style="margin-top:6px">Calculator inputs stay in your browser. Forms send only what you type. <a href="partner.html#privacy">Privacy</a></p>
+    </div>
+    <nav aria-label="Footer">
+      <a href="guide.html">Field guide</a>
+      <a href="partner.html">Deploy</a>
+      <a href="https://docs.typesafe.ai" target="_blank" rel="noopener">TypeSafe docs ↗</a>
+      <a data-contact href="#"></a>
+    </nav>
+  </div>
+</footer>
+
+<!-- The brief: rendered by assess.js, printable as a PDF -->
+<dialog id="brief-dialog" aria-labelledby="brief-heading">
+  <div class="dialog-actions">
+    <button class="btn btn-primary btn-sm" id="print-brief" type="button">Save as PDF</button>
+    <button class="btn btn-ghost btn-sm" id="close-brief" type="button">Close</button>
+  </div>
+  <article id="brief-body"></article>
+</dialog>
+
+<script src="config.js"></script>
+<script src="assets/site.js"></script>
+<script src="assets/assess.js"></script>
+</body>
+</html>

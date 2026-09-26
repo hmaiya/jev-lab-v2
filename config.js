@@ -1,0 +1,35 @@
+/*
+  Decision Lab: site configuration.
+  This is the only file you need to edit before hosting.
+
+  1. formEndpoint: where form submissions go. Any service that accepts a JSON POST works.
+       Formspree:  'https://formspree.io/f/your-form-id'
+       Web3Forms:  'https://api.web3forms.com/submit'  (also set formExtraFields.access_key)
+       Basin, Getform, or your own endpoint also work.
+     Leave it empty to run in preview mode: forms work, nothing is sent, and a banner says so.
+
+  2. bookingUrl: your Cal.com or Calendly link for the 30-minute fit review.
+     Leave it empty and booking buttons point to the intake form instead.
+
+  Team and partner logos are maintained in partner.html and assets/logos/.
+*/
+window.SITE_CONFIG = {
+  brand: 'Decision Lab',
+
+  // Lead capture
+  formEndpoint: '',
+  formExtraFields: {},            // e.g. { access_key: 'your-web3forms-key' }
+  bookingUrl: '',                 // e.g. 'https://cal.com/your-name/fit-review'
+  contactEmail: 'inquire@useorin.com',
+
+  // Facts pulled from TypeSafe's public docs. Re-check before each release.
+  jev: {
+    inputPricePerMillion: 0.042,  // USD per million input tokens. Output tokens are free.
+    medianSeconds: 0.114,         // TypeSafe homepage: completed requests in 0.114s vs 8.566s for LLMs
+    llmMedianSeconds: 8.566,
+    requestsPerMinute: 1200,      // docs.typesafe.ai/models, subject to dynamic adjustment
+    maxStatePlusQuestionTokens: 32000,
+    maxRequestTokens: 64000,
+    verifiedOn: '25 Sep 2026'
+  }
+};

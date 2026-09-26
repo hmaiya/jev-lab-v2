@@ -1,0 +1,48 @@
+/* Decision Lab: field guide. */
+
+.guide-hero { padding-bottom: 24px; }
+.guide { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 56px; align-items: start; padding-bottom: 40px; }
+
+/* Table of contents */
+.toc { position: sticky; top: 88px; display: grid; gap: 2px; font-size: 14px; }
+.toc-title { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.toc a { color: var(--muted); text-decoration: none; padding: 5px 10px; border-left: 2px solid var(--line); }
+.toc a:hover { color: var(--ink); }
+.toc a.active { color: var(--ink); border-left-color: var(--accent); font-weight: 600; }
+
+/* Body */
+.guide-body { max-width: 800px; }
+.guide-body section { padding: 32px 0 36px; border-top: 1px solid var(--line); scroll-margin-top: 80px; }
+.guide-body section:first-child { border-top: 0; padding-top: 8px; }
+.guide-body h2 { margin-bottom: 12px; }
+.guide-body section > p { color: var(--ink-2); margin-bottom: 16px; max-width: 680px; }
+.guide-body pre { margin-top: 16px; }
+.note { font-size: 14px; color: var(--muted) !important; margin-top: 14px; }
+
+.fit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.fit-grid > div { border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+.fit-grid h3 { font-size: 16px; }
+.fit-grid p { font-size: 14px; color: var(--ink-2); margin-top: 6px; }
+
+/* Confidence bands */
+.bands { display: grid; grid-template-columns: 1fr 1.2fr 1fr; border-radius: var(--radius); overflow: hidden; margin: 8px 0 18px; border: 1px solid var(--line); }
+.bands > div { padding: 14px 16px; display: grid; gap: 4px; }
+.bands b { font-size: 18px; font-variant-numeric: tabular-nums; }
+.bands span { font-size: 14px; }
+.band-low { background: var(--bad-soft); color: #7d1a14; }
+.band-mid { background: var(--warn-soft); color: #6f4204; }
+.band-high { background: var(--good-soft); color: #0f5a37; }
+
+.plain { padding-left: 18px; display: grid; gap: 8px; color: var(--ink-2); margin: 16px 0 0; }
+.playbook { padding-left: 20px; display: grid; gap: 10px; color: var(--ink-2); margin: 0; }
+.cta-card { margin-top: 24px; display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; background: var(--accent-soft); border-radius: var(--radius); padding: 16px 20px; }
+.sources { padding-left: 18px; display: grid; gap: 6px; font-size: 15px; }
+
+@media (max-width: 860px) {
+  .guide { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .toc { position: static; display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .toc-title { width: 100%; margin-bottom: 2px; }
+  .toc a { border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; }
+  .toc a.active { border-color: var(--line); }
+  .bands { grid-template-columns: 1fr; }
+}
