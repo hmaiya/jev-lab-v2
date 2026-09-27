@@ -17,8 +17,11 @@ window.SITE_CONFIG = {
   brand: 'Decision Lab',
 
   // Lead capture
-  formEndpoint: '',
-  formExtraFields: {},            // e.g. { access_key: 'your-web3forms-key' }
+  formEndpoint: 'https://api.web3forms.com/submit',
+  formExtraFields: {
+    access_key: '4483a6ba-dcbd-4964-8f1b-2af9b9085b3b',
+    subject: 'Decision Lab inquiry'
+  },
   bookingUrl: '',                 // e.g. 'https://cal.com/your-name/fit-review'
   contactEmail: 'inquire@useorin.com',
 
