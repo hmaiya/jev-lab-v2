@@ -22,15 +22,15 @@ window.SITE_CONFIG = {
     access_key: '4483a6ba-dcbd-4964-8f1b-2af9b9085b3b',
     subject: 'Decision Lab inquiry'
   },
-  bookingUrl: '',                 // e.g. 'https://cal.com/your-name/fit-review'
-  contactEmail: 'inquire@useorin.com',
+  bookingUrl: 'https://calendly.com/harish-useorin/30min',
+  contactEmail: 'contact@useorin.com',
 
   // Facts pulled from TypeSafe's public docs. Re-check before each release.
   jev: {
-    inputPricePerMillion: 0.042,  // USD per million input tokens. Output tokens are free.
-    medianSeconds: 0.114,         // TypeSafe homepage: completed requests in 0.114s vs 8.566s for LLMs
+    inputPricePerMillion: 0.042,
+    medianSeconds: 0.114,
     llmMedianSeconds: 8.566,
-    requestsPerMinute: 1200,      // docs.typesafe.ai/models, subject to dynamic adjustment
+    requestsPerMinute: 1200,
     maxStatePlusQuestionTokens: 32000,
     maxRequestTokens: 64000,
     verifiedOn: '25 Sep 2026'
